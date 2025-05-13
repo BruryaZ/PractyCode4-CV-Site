@@ -1,4 +1,5 @@
 ﻿using Core.Services;
+using Microsoft.Extensions.Caching.Memory;
 using Octokit;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,24 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class CacheGitHubService(IGitHubService gitHubService) : IGitHubService
+    public class CacheGitHubService(IGitHubService gitHubService, IMemoryCache memoryCache) : IGitHubService
     {
         private readonly IGitHubService _gitHubService = gitHubService;
-        public async Task<IReadOnlyList<Repository>> GetRepositories(string username)
+        private readonly IMemoryCache _cache = memoryCache;
+        private const string userPortfolioKey = "userPortdolioKey";
+        public async Task<IReadOnlyList<Repository>> GetPortfolio(string username)
         {
-            return await _gitHubService.GetRepositories(username);
+            if(_cache.TryGetValue(userPortfolioKey, out IReadOnlyList<Repository> cachedPortfolio))
+                return cachedPortfolio;
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(30))
+                .SetSlidingExpiration(TimeSpan.FromSeconds(10));
+
+            cachedPortfolio = await _gitHubService.GetPortfolio(username);
+            _cache.Set(userPortfolioKey, cachedPortfolio, cacheOptions);
+
+            return cachedPortfolio;
         }
 
         public async Task<IReadOnlyList<Repository>> SearchRepositories(string? userName, string? repoName, string? language)

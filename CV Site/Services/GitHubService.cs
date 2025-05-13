@@ -16,7 +16,7 @@ namespace Services
             _client = new GitHubClient(new ProductHeaderValue("GitHubService"));
         }
 
-        public async Task<IReadOnlyList<Repository>> GetRepositories(string username)
+        public async Task<IReadOnlyList<Repository>> GetPortfolio(string username)
         {
             return await _client.Repository.GetAllForUser(username);
         }
