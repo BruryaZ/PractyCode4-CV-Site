@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using GitHub.Core.Services;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,20 @@ namespace GitHub.services
             _client = new GitHubClient(new ProductHeaderValue("GitHubService"));
         }
 
-        public async Task<int> GetUserFollowerAsync(string username)
+        public Task<IReadOnlyList<Repository>> GetRepositories(string username)
         {
-            var user = await _client.User.Get(username);
-            return user.Followers;
+            return _client.Repository.GetAllForUser(username);
         }
-        public async Task<IReadOnlyList<Repository>> GetRepositories(string username)
-        {
-            var repositories = await _client.Repository.GetAllForUser(username);
-            return repositories;
-        }
+
+        //public async Task<int> GetUserFollowerAsync(string username)
+        //{
+        //    var user = await _client.User.Get(username);
+        //    return user.Followers;
+        //}
+        //public async Task<IReadOnlyList<Repository>> GetRepositories(string username)
+        //{
+        //    var repositories = await _client.Repository.GetAllForUser(username);
+        //    return repositories;
+        //}
     }
 }
