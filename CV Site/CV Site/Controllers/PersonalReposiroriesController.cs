@@ -11,9 +11,9 @@ namespace CV_Site.Controllers
     {
         private readonly IGitHubService _githubService = gitHubService;
         [HttpGet("by-user-name")]
-        public Task<IReadOnlyList<Repository>> GetPortfolio(string userName)
+        public Task<IReadOnlyList<Repository>> GetPortfolio()
         {
-            return _githubService.GetPortfolio(userName);
+            return _githubService.GetPortfolio();
         }
 
         [HttpGet("by-criterion")]

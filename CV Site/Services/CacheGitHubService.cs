@@ -14,7 +14,7 @@ namespace Services
         private readonly IGitHubService _gitHubService = gitHubService;
         private readonly IMemoryCache _cache = memoryCache;
         private const string userPortfolioKey = "userPortdolioKey";
-        public async Task<IReadOnlyList<Repository>> GetPortfolio(string username)
+        public async Task<IReadOnlyList<Repository>> GetPortfolio()
         {
             if(_cache.TryGetValue(userPortfolioKey, out IReadOnlyList<Repository> cachedPortfolio))
                 return cachedPortfolio;
@@ -23,7 +23,7 @@ namespace Services
                 .SetAbsoluteExpiration(TimeSpan.FromSeconds(30))
                 .SetSlidingExpiration(TimeSpan.FromSeconds(10));
 
-            cachedPortfolio = await _gitHubService.GetPortfolio(username);
+            cachedPortfolio = await _gitHubService.GetPortfolio();
             _cache.Set(userPortfolioKey, cachedPortfolio, cacheOptions);
 
             return cachedPortfolio;

@@ -1,5 +1,6 @@
 using Core.Models;
 using Core.Services;
+using CV_Site;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IGitHubService, GitHubService>();
 builder.Services.Decorate<IGitHubService, CacheGitHubService>();
+
+// הזרקה ספציפית של נתונים
 builder.Services.Configure<GitHubIntegrationOptions>(builder.Configuration.GetSection(nameof(GitHubIntegrationOptions)));
+builder.Services.AddGitHubIntegartion(options => builder.Configuration.GetSection(nameof(GitHubIntegrationOptions)).Bind(options));
 
 var app = builder.Build();
 

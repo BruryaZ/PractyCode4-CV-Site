@@ -1,4 +1,6 @@
-﻿using Core.Services;
+﻿using Core.Models;
+using Core.Services;
+using Microsoft.Extensions.Options;
 using Octokit;
 using System;
 using System.Collections.Generic;
@@ -8,17 +10,14 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class GitHubService : IGitHubService
+    public class GitHubService(IOptions<GitHubIntegrationOptions> gitHubIntegrationOptions) : IGitHubService
     {
-        private readonly GitHubClient _client;
-        public GitHubService()
-        {
-            _client = new GitHubClient(new ProductHeaderValue("GitHubService"));
-        }
+        private readonly GitHubClient _client = new GitHubClient(new ProductHeaderValue("GitHubService"));
+        private readonly GitHubIntegrationOptions _options = gitHubIntegrationOptions.Value;
 
-        public async Task<IReadOnlyList<Repository>> GetPortfolio(string username)
+        public async Task<IReadOnlyList<Repository>> GetPortfolio()
         {
-            return await _client.Repository.GetAllForUser(username);
+            return await _client.Repository.GetAllForUser(_options.UserName);
         }
 
         public async Task<IReadOnlyList<Repository>> SearchRepositories(string? userName, string? repoName, string? language)
