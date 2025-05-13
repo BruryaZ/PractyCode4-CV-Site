@@ -1,14 +1,9 @@
 ﻿using GitHub.Core.Services;
 using Octokit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GitHub.services
+namespace GitHub.Services
 {
-    public class GitHubService : IGitHubService
+    internal class GitHubService: IGitHubService
     {
         private readonly GitHubClient _client;
         public GitHubService()
