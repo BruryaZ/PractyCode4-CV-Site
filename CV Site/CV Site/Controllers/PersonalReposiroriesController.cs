@@ -1,40 +1,25 @@
-﻿using GitHub.Core.Services;
-using Microsoft.AspNetCore.DataProtection.Repositories;
+﻿using Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Octokit;
 
 namespace CV_Site.Controllers
 {
-    [Route("[controller]")]//TODO
-    [ApiController]
+
+    [Controller]
+    [Route("[Controller]")]
     public class PersonalReposiroriesController(IGitHubService gitHubService) : ControllerBase
     {
         private readonly IGitHubService _githubService = gitHubService;
-        [HttpGet]
+        [HttpGet("by-user-name")]
         public Task<IReadOnlyList<Repository>> Get(string userName)
         {
             return _githubService.GetRepositories(userName);
         }
 
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+        [HttpGet("by-criterion")]
+        public Task<IReadOnlyList<Repository>> SearchRepositories(string? userName, string? repoName, string? language)
+        {
+            return _githubService.SearchRepositories(userName, repoName, language);
+        }
     }
 }

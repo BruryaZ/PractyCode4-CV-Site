@@ -1,4 +1,4 @@
-@CV_Site_HostAddress = http://localhost:5005
+@CV_Site_HostAddress = http://localhost:5197
 
 GET {{CV_Site_HostAddress}}/weatherforecast/
 Accept: application/json
